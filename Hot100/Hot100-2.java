@@ -1,3 +1,34 @@
+//官方题解：排序法。
+//由于互为字母异位词的两个字符串包含的字母相同，因此对两个字符串分别进行排序之后
+//得到的字符串一定是相同的，故可以将排序之后的字符串作为哈希表的键。
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        for (String str : strs) {
+            //将当前字符串 str 转换为字符数组 array，方便后续排序。
+            char[] array = str.toCharArray();
+            //直接使用Arrays.sort()对任意数组进行排序;
+            Arrays.sort(array);
+            //将排序后的字符数组重新转换为字符串 key，作为哈希表的键。
+            String key = new String(array);
+            //从哈希表 map 中获取与键 key 对应的字符串列表。如果不存在，则返回一个新的空列表。
+            List<String> list = map.getOrDefault(key, new ArrayList<String>());
+            list.add(str);
+            map.put(key, list);
+        }
+        //将哈希表 map 中的所有值（即所有字母异位词组）转换为一个ArrayList列表并返回。
+        return new ArrayList<List<String>>(map.values());
+    }
+}
+
+
+//官方题解：计数法。
+
+
+
+
+
+//我的题解
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
         if (strs.length == 1) {
