@@ -22,8 +22,55 @@ class Solution {
 }
 
 
-//官方题解：计数法。
 
+//官方题解：计数法。
+//字母异位词的两个字符串中的相同字母出现的次数一定是相同的，故可以将每个字母出现的次数使用【字符串】表示，作为哈希表的键。
+//由于字符串只包含小写字母，因此对于每个字符串，可以使用长度为 26 的数组记录每个字母出现的次数。
+//关于StringBuffer的使用：
+/*
+使用StringBuffer（或StringBuilder）是为了提高字符串拼接的效率。
+
+（多线程用StringBuffer，线程安全但有同步开销）
+（在单线程环境中，StringBuilder通常是更好的选择，不是线程安全的，但性能更好）
+
+使用String直接拼接的问题：
+Java中的String是不可变对象（immutable），
+每次使用+=操作都会创建一个新的String对象，
+原来的String对象变成垃圾，需要被GC回收。
+时间复杂度为O(n²)，其中n是拼接的字符串数量。
+
+使用StringBuffer的优势：
+内部维护一个可变的字符数组（内部缓冲区），
+append操作直接在数组上进行，无需创建新对象，
+最后一次性转换为String对象。
+时间复杂度为O(n)。
+*/
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        for (String str : strs) {
+            int[] counts = new int[26];
+            int length = str.length();
+            for (int i = 0; i < length; i++) {
+		//计算当前字符相对于'a'的偏移量作为索引，为对应位置的计数器加一；
+                counts[str.charAt(i) - 'a']++;
+            }
+            // 将每个出现次数大于 0 的字母和出现次数按顺序拼接成字符串，作为哈希表的键
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < 26; i++) {
+                if (counts[i] != 0) {
+                    sb.append((char) ('a' + i));	//将当前字母添加到特征键字符串中；
+                    sb.append(counts[i]);		//将当前字母的出现次数添加到特征键字符串中。
+                }
+            }
+            String key = sb.toString();	//将StringBuffer转换回字符串，作为特征键；
+            List<String> list = map.getOrDefault(key, new ArrayList<String>());	//从map中获取对应特征键的列表，如果不存在则创建一个新的空列表
+            list.add(str);		//将当前字符串添加到对应的列表中；
+            map.put(key, list);		//将特征键和对应的列表存回map中。
+        }
+        return new ArrayList<List<String>>(map.values());
+    }
+}
 
 
 
