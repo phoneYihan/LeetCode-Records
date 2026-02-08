@@ -1,7 +1,7 @@
 //官方解法：
 //
 /*
-
+在第二重for循环：先判断本次第二指针（b指针）是否和上一次重复，再添加正确答案；因为是for循环所以加一个break结束循环。
 */
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
@@ -45,6 +45,45 @@ class Solution {
     }
 }
 
+
+
+另一个正确答案：
+/*
+在第二重 用while循环：先判断是否添加正确答案，再（在第三重while循环里）判断下次第二指针和第三指针（b指针和c指针）是否和这一次重复；因为是while循环所以用 (l<r) 结束循环。
+*/
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums); // 先排序
+        List<List<Integer>> res = new ArrayList<>();
+        
+        for (int i = 0; i < nums.length; i++) {
+            // 跳过重复元素
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            
+            // 双指针，目标是找到 nums[l] + nums[r] = -nums[i]
+            int l = i + 1, r = nums.length - 1;
+            int target = -nums[i];
+            
+            while (l < r) {
+                int sum = nums[l] + nums[r];
+                if (sum == target) {
+                    res.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                    l++;
+                    r--;
+                    // 跳过重复元素
+                    while (l < r && nums[l] == nums[l - 1]) l++;
+                    while (l < r && nums[r] == nums[r + 1]) r--;
+                } else if (sum < target) {
+                    l++;
+                } else {
+                    r--;
+                }
+            }
+        }
+        
+        return res;
+    }
+}
 
 
 
