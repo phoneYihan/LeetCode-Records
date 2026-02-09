@@ -1,7 +1,8 @@
 //官方解法：
 //
 /*
-在第二重for循环：先判断本次第二指针（b指针）是否和上一次重复，再添加正确答案；因为是for循环所以加一个break结束循环。
+在第二重for循环：先判断本次第二指针（b指针）是否和上一次重复，再添加正确答案；
+因为是for循环，所以用if语句保证数字不重复、用一个while循环保证b在c的左侧、用break结束循环。
 */
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
@@ -49,7 +50,8 @@ class Solution {
 
 另一个正确答案：
 /*
-在第二重 用while循环：先判断是否添加正确答案，再（在第三重while循环里）判断下次第二指针和第三指针（b指针和c指针）是否和这一次重复；因为是while循环所以用 (l<r) 结束循环。
+在第二重 用while循环：先判断是否添加正确答案，再（在第三重while循环里）判断下次第二指针和第三指针（b指针和c指针）是否和这一次重复；
+因为是while循环，所以 (l<r)本身即可保证b(l)在c(r)的左侧、可保证结束循环。再加一个while循环用来保证数字不重复。
 */
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
