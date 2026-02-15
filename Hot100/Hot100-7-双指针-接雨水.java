@@ -79,6 +79,29 @@ class Solution {
 
 
 //单调栈解法
-
+/*
+学到栈的时候再来看一下。
+*/
+class Solution {
+    public int trap(int[] height) {
+        int ans = 0;
+        Deque<Integer> stack = new LinkedList<Integer>();
+        int n = height.length;
+        for (int i = 0; i < n; ++i) {
+            while (!stack.isEmpty() && height[i] > height[stack.peek()]) {
+                int top = stack.pop();
+                if (stack.isEmpty()) {
+                    break;
+                }
+                int left = stack.peek();
+                int currWidth = i - left - 1;
+                int currHeight = Math.min(height[left], height[i]) - height[top];
+                ans += currWidth * currHeight;
+            }
+            stack.push(i);
+        }
+        return ans;
+    }
+}
 
 
