@@ -40,3 +40,21 @@ public class Solution {
 
 
 //暴力枚举解法：
+/*
+关键是在内层循环时，向左遍历数组，并且不设置continue；
+*/
+public class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int count = 0;
+        for (int start = 0; start < nums.length; ++start) {
+            int sum = 0;
+            for (int end = start; end >= 0; --end) {
+                sum += nums[end];
+                if (sum == k) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}
