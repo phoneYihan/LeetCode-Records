@@ -1,19 +1,27 @@
 //大神题解：
 
 /*
-
+循环过程：
+先把前（i-2）项和的余数存进哈希set里，
+然后判断集合里是否存在前i项和的余数；
+如果存在，根据同余，满足（前某项和 % k）=（前i项和 % k），可返回true；
 */
 
 class Solution {
     public boolean checkSubarraySum(int[] nums, int k) {
         int n = nums.length;
         int[] sum = new int[n + 1];
-        for (int i = 1; i <= n; i++) sum[i] = sum[i - 1] + nums[i - 1];
+        for (int i = 1; i <= n; i++) {
+		sum[i] = sum[i - 1] + nums[i - 1];
+	}
         Set<Integer> set = new HashSet<>();
         for (int i = 2; i <= n; i++) {
             set.add(sum[i - 2] % k);
-            if (set.contains(sum[i] % k)) return true;
+            if (set.contains(sum[i] % k)) {
+		return true;
+	    }	
         }
+
         return false;
     }
 }
@@ -28,6 +36,8 @@ class Solution {
 即：若 ( pre(j) - pre (i) ) % k == 0 ，则 pre(j) % k == pre(i) % k
 
 又有：pre (i) % k = (a0 + a1 + ... + ai) % k = (a0 % k + a1 % k + ... ai % k ) % k
+///求几个数的和的余数时，可以逐个先求出这几个数的余数、再把余数加起来、最后把余数之和取余数，得到的结果是一样的。
+////在逐个求余数的步骤，求一次余数和求多次余数是等价的。
 
 --哈希表：Key ：pre(i) % k；Value： i
 
@@ -50,6 +60,7 @@ class Solution {
         map.put(0, -1);
         int remainder = 0;
         for (int i = 0; i < m; i++) {
+		//利用取余求和规律，快速当前计算前缀和的余数；
             remainder = (remainder + nums[i]) % k;
             if (map.containsKey(remainder)) {
                 int prevIndex = map.get(remainder);
@@ -60,6 +71,7 @@ class Solution {
                 map.put(remainder, i);
             }
         }
+
         return false;
     }
 }
