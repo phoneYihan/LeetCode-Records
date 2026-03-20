@@ -1,16 +1,25 @@
 //官方题解（滑动窗口）
 
+/*
+固定子数组 [i,j] 的右端点 j；
+对于子数组 [i,j]，存在一个满足以下条件的l1：当左端点 i≥l1时，所有子数组的元素乘积都小于 k，当左端点 i<l1时，所有子数组的元素乘积都大于等于 k；
+那么对于右端点为 j+1 的所有子数组，它的左端点 i 就不需要从 0 开始枚举，而是从 i=l1处开始枚举。
+
+我们枚举子数组的右端点 j，并且左端点从 i=0 开始，用 prod 记录子数组 [i,j] 的元素乘积。每枚举一个右端点 j，如果当前子数组元素乘积 prod 大于等于 k，
+那么我们【右移左端点 i 直到满足当前子数组元素乘积小于 k 或者 i>j】，那么元素乘积小于 k 的子数组数目为 j−i+1。返回所有数目之和。
+*/
+
 class Solution {
     public int numSubarrayProductLessThanK(int[] nums, int k) {
         int n = nums.length, ret = 0;
         int prod = 1, i = 0;
         for (int j = 0; j < n; j++) {
-            prod *= nums[j];
+            prod = prod * nums[j];
             while (i <= j && prod >= k) {
-                prod /= nums[i];
+                prod = prod / nums[i];
                 i++;
             }
-            ret += j - i + 1;
+            ret = ret + j - i + 1;
         }
         return ret;
     }
