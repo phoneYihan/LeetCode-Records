@@ -1,28 +1,45 @@
 //官方题解一，【优先队列】
 /*
 使用 大根堆 实时维护一系列元素中的最大值。
-
 为了方便判断堆顶元素与滑动窗口的位置关系，我们可以在优先队列中存储二元组 (num,index)，表示元素 num 在数组中的下标为 index。
 */
+
 
 class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
+/*
+创建一个优先队列（最大堆），存储 int[] 类型的元素。每个元素是一个二元组 [数值, 索引]。
+--比较器的逻辑：
+如果两个数值不相等，返回 pair2[0] - pair1[0]，即按数值降序排列（大的在前）;
+如果数值相等，返回 pair2[1] - pair1[1]，即按索引降序排列（大的在前）;
+这样优先队列的队首（peek）就是当前窗口中数值最大（索引也最大的）元素。
+*/
         PriorityQueue<int[]> pq = new PriorityQueue<int[]>(new Comparator<int[]>() {
             public int compare(int[] pair1, int[] pair2) {
                 return pair1[0] != pair2[0] ? pair2[0] - pair1[0] : pair2[1] - pair1[1];
             }
         });
+
+//将前 k 个元素（第一个窗口）加入优先队列。
         for (int i = 0; i < k; ++i) {
             pq.offer(new int[]{nums[i], i});
         }
+//创建结果数组，长度为滑动窗口的数量。
         int[] ans = new int[n - k + 1];
+//第一个窗口的最大值就是队首元素的数值部分。
         ans[0] = pq.peek()[0];
+
+//再从第 k 个元素开始遍历（即第二个窗口的右边界）。
         for (int i = k; i < n; ++i) {
+	    //同上，将当前元素加入优先队列。
             pq.offer(new int[]{nums[i], i});
+	    //移除所有不在当前窗口内的元素。循环执行直到队首元素在当前窗口内。
+	    //i - k 是当前窗口的左边界索引，如果队首元素的索引 ≤ 左边界，说明它已经不在窗口中，需要移除。
             while (pq.peek()[1] <= i - k) {
                 pq.poll();
             }
+	    //当前窗口的最大值就是队首元素的数值，存入结果数组对应位置。
             ans[i - k + 1] = pq.peek()[0];
         }
         return ans;
