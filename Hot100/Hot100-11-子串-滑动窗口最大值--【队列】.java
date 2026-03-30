@@ -48,6 +48,46 @@ class Solution {
 
 
 
+//官方题解二，【单调队列】
+
+//使用一个单调递减的双端队列。为了方便获取窗口最大值，需要单调递减；为了可以同时弹出队首和队尾的元素，需要双端队列。
+/*
+可以使用一个队列存储所有还没有被移除的下标。
+在队列中，这些下标按照从小到大(从左到右)的顺序被存储，并且它们在数组 nums 中对应的值是严格单调递减的。
+
+-当滑动窗口向右移动时，会不断地将新的元素与队尾的元素相比较。如果前者大于等于后者，那么队尾的元素就可以被永久地移除，我们将其弹出队列。
+-队首下标的元素就是滑动窗口中的最大值。但最大值可能在滑动窗口左边界的左侧，因此还需要不断从队首弹出元素，直到队首元素在窗口中为止。
+
+*/
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        Deque<Integer> deque = new LinkedList<Integer>();
+        for (int i = 0; i < k; ++i) {
+            while (!deque.isEmpty() && nums[i] >= nums[deque.peekLast()]) {
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+        }
+
+        int[] ans = new int[n - k + 1];
+        ans[0] = nums[deque.peekFirst()];
+        for (int i = k; i < n; ++i) {
+            while (!deque.isEmpty() && nums[i] >= nums[deque.peekLast()]) {
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+            while (deque.peekFirst() <= i - k) {
+                deque.pollFirst();
+            }
+            ans[i - k + 1] = nums[deque.peekFirst()];
+        }
+        return ans;
+    }
+}
+
+
 
 
 
