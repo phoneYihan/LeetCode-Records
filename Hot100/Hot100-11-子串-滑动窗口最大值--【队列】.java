@@ -64,23 +64,30 @@ class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
         Deque<Integer> deque = new LinkedList<Integer>();
+	//第一个for循环 代表单独处理第一个窗口，从0开始，到k-1结束；
         for (int i = 0; i < k; ++i) {
+	    //当队列不为空 且 当前元素大于等于队列尾部对应的数组元素时，移除队列尾部的索引。
+	    //目的是保持队列单调递减，确保队列头部始终是当前窗口的最大值的索引。
             while (!deque.isEmpty() && nums[i] >= nums[deque.peekLast()]) {
-                deque.pollLast();
+                deque.pollLast();	//【移除】队列尾部的那个索引。（维护队列单调性）
             }
-            deque.offerLast(i);
+            deque.offerLast(i);	//将当前索引 i 【添加】到队列尾部。
         }
 
         int[] ans = new int[n - k + 1];
         ans[0] = nums[deque.peekFirst()];
+	//第二个for循环 代表继续处理后续的窗口，从k开始，到n-1结束；
         for (int i = k; i < n; ++i) {
             while (!deque.isEmpty() && nums[i] >= nums[deque.peekLast()]) {
                 deque.pollLast();
             }
             deque.offerLast(i);
+	    //如果队列头部的索引不在当前窗口范围内，则将其移除。这确保了队列头部始终指向当前窗口内的最大值。
             while (deque.peekFirst() <= i - k) {
                 deque.pollFirst();
             }
+
+	    //将当前窗口的最大值（队列头部对应的数组元素）存入结果数组对应的位置。
             ans[i - k + 1] = nums[deque.peekFirst()];
         }
         return ans;
