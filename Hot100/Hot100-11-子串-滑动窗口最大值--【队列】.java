@@ -105,6 +105,18 @@ class Solution {
 -如果 i 不是 k 的倍数，那么 nums[i] 到 nums[i+k−1] 会跨越两个分组；如果我们能够预处理出每个分组中的前缀最大值以及后缀最大值，
 同样可以在 O(1) 的时间得到答案。
 
+-- preffix[i]存的是各个分组从分组开头到索引i的最大值（i % k == 0的值为各个分组的开头）；
+因为是从分组开头开始，所以是【从左往右遍历】，每次到分组的新的开头（进入新的分组），preffix[i]就直接更新为分组开头的元素；
+因为是从前往后遍历，所以是前缀最大值。
+
+-- suffix[i]存的是各个分组从分组末尾到索引i的最大值（ (i + 1） % k == 0或最后一个索引的值为各个分组的末尾）；
+因为是分组末尾开始，所以是【从右往左遍历】，每次到分组的新的末尾（进入新的分组），suffix[i]就直接更新组为分组末尾的元素；
+因为是从后往前遍历，所以是后缀最大值。
+
+-当 i 不是 k 的倍数 -> 从nums[i] 到 nums[i+k−1] 会跨越两个分组 -> 只需要比较前缀最大值（preffix[i]）和后缀最大值（suffix[i]）哪个更大，即可得到正确输出。
+
+-当 i 是 k 的倍数，那么此时窗口恰好对应一整个分组，不论是 suffixMax[i] 还是 prefixMax[i+k−1] 都同时等于分组中的最大值；
+因此无论窗口属于哪一种情况，max{suffixMax[i],prefixMax[i+k−1]} 即为答案。
 
 */
 
@@ -113,6 +125,8 @@ class Solution {
         int n = nums.length;
         int[] prefixMax = new int[n];
         int[] suffixMax = new int[n];
+
+	//用 prefixMax[i] 表示下标 i 对应的分组中，以 i 结尾的前缀最大值；递推式如下：
         for (int i = 0; i < n; ++i) {
             if (i % k == 0) {
                 prefixMax[i] = nums[i];
@@ -121,6 +135,8 @@ class Solution {
                 prefixMax[i] = Math.max(prefixMax[i - 1], nums[i]);
             }
         }
+
+	//用suffixMax[i] 表示下标 i 对应的分组中，以 i 开始的后缀最大值；递推式如下：
         for (int i = n - 1; i >= 0; --i) {
             if (i == n - 1 || (i + 1) % k == 0) {
                 suffixMax[i] = nums[i];
