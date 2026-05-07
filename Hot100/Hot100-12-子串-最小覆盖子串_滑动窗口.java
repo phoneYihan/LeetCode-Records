@@ -1,5 +1,9 @@
-//灵神-朴素解法
+//灵神-朴素解法（不定长滑动窗口）
 
+/*
+像毛毛虫一样：每次向右移动一次right，同时，若满足涵盖要求，则向右移动left。（移动left是为了寻找更右边 是否存在满足涵盖的子串）
+
+*/
 class Solution {
     public String minWindow(String S, String t) {
         int[] cntS = new int[128]; // s 子串字母的出现次数
